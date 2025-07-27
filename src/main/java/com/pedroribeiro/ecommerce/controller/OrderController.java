@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,5 +50,23 @@ public class OrderController {
         String token = authHeader.replace("Bearer ", "").trim();
         String username = jwtService.extractUsername(token);
         return ResponseEntity.ok(orderService.getUserOrders(username));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/top-buyers")
+    public ResponseEntity<?> getTopBuyers() {
+        return ResponseEntity.ok(orderService.getTopBuyers());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/avg-ticket")
+    public ResponseEntity<?> getAverageTicket() {
+        return ResponseEntity.ok(orderService.getAverageTicketPerUser());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/total-monthly")
+    public ResponseEntity<?> getMonthlyRevenue() {
+        return ResponseEntity.ok(orderService.getTotalRevenueCurrentMonth());
     }
 }

@@ -1,5 +1,6 @@
 package com.pedroribeiro.ecommerce.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -112,6 +113,18 @@ public class OrderService {
     public List<OrderDTO> getUserOrders(String username) {
         List<Order> orders = orderRepository.findByUserUsername(username);
         return orders.stream().map(this::mapToDTO).toList();
+    }
+
+    public List<?> getTopBuyers() {
+        return orderRepository.findTopBuyers();
+    }
+
+    public List<?> getAverageTicketPerUser() {
+        return orderRepository.findAverageTicketPerUser();
+    }
+
+    public BigDecimal getTotalRevenueCurrentMonth() {
+        return orderRepository.findTotalRevenueCurrentMonth();
     }
 
     private OrderDTO mapToDTO(Order order) {
