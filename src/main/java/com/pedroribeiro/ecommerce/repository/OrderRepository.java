@@ -1,5 +1,6 @@
 package com.pedroribeiro.ecommerce.repository;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,4 +10,5 @@ import com.pedroribeiro.ecommerce.model.Order;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, UUID> {
+    List<Order> findByUserUsername(String username);
 }
