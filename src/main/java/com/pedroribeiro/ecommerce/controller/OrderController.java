@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pedroribeiro.ecommerce.dto.OrderDTO;
+import com.pedroribeiro.ecommerce.dto.requests.OrderRequestDTO;
 import com.pedroribeiro.ecommerce.security.JwtService;
 import com.pedroribeiro.ecommerce.service.OrderService;
 
@@ -34,7 +35,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO request, @RequestParam String username) {
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderRequestDTO request, @RequestParam String username) {
         OrderDTO orderDTO = orderService.createOrder(request, username);
         return ResponseEntity.ok(orderDTO);
     }

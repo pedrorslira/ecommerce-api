@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pedroribeiro.ecommerce.dto.ProductDTO;
+import com.pedroribeiro.ecommerce.dto.requests.ProductRequestDTO;
 import com.pedroribeiro.ecommerce.service.ProductService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +33,7 @@ public class ProductController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody ProductDTO product) {
+    public ResponseEntity<ProductDTO> create(@RequestBody ProductRequestDTO product) {
         return ResponseEntity.ok(productService.create(product));
     }
 
@@ -48,7 +49,7 @@ public class ProductController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable UUID id, @RequestBody ProductDTO product) {
+    public ResponseEntity<ProductDTO> update(@PathVariable UUID id, @RequestBody ProductRequestDTO product) {
         return ResponseEntity.ok(productService.update(id, product));
     }
 

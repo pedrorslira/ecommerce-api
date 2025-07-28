@@ -14,6 +14,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.pedroribeiro.ecommerce.dto.OrderDTO;
 import com.pedroribeiro.ecommerce.dto.OrderItemDTO;
+import com.pedroribeiro.ecommerce.dto.requests.OrderItemRequestDTO;
+import com.pedroribeiro.ecommerce.dto.requests.OrderRequestDTO;
 import com.pedroribeiro.ecommerce.model.Order;
 import com.pedroribeiro.ecommerce.model.OrderItem;
 import com.pedroribeiro.ecommerce.model.Product;
@@ -40,7 +42,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderDTO createOrder(OrderDTO request, String username) {
+    public OrderDTO createOrder(OrderRequestDTO request, String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -55,7 +57,7 @@ public class OrderService {
         List<OrderItem> items = new ArrayList<>();
         double total = 0.0;
 
-        for (OrderItemDTO itemDTO : request.getItems()) {
+        for (OrderItemRequestDTO itemDTO : request.getItems()) {
             Product product = productRepository.findById(itemDTO.getProductId())
                     .orElseThrow(() -> new RuntimeException("Product not found: " + itemDTO.getProductId()));
 

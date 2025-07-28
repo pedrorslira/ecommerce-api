@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.pedroribeiro.ecommerce.dto.ProductDTO;
+import com.pedroribeiro.ecommerce.dto.requests.ProductRequestDTO;
 import com.pedroribeiro.ecommerce.model.Product;
 import com.pedroribeiro.ecommerce.repository.ProductRepository;
 
@@ -23,7 +24,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public ProductDTO create(ProductDTO dto) {
+    public ProductDTO create(ProductRequestDTO dto) {
         LocalDateTime now = LocalDateTime.now();
         Date date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
 
@@ -52,7 +53,7 @@ public class ProductService {
         return convertToDTO(product);
     }
 
-    public ProductDTO update(UUID id, ProductDTO updatedProduct) {
+    public ProductDTO update(UUID id, ProductRequestDTO updatedProduct) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
 
