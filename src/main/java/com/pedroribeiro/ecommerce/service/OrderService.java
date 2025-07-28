@@ -1,6 +1,7 @@
 package com.pedroribeiro.ecommerce.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class OrderService {
     @Transactional
     public OrderDTO createOrder(OrderRequestDTO request, String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         Order order = new Order();
         order.setUser(user);
@@ -55,11 +56,11 @@ public class OrderService {
         order.setOrderDate(date);
 
         List<OrderItem> items = new ArrayList<>();
-        double total = 0.0;
+        BigDecimal total = BigDecimal.ZERO;
 
         for (OrderItemRequestDTO itemDTO : request.getItems()) {
             Product product = productRepository.findById(itemDTO.getProductId())
-                    .orElseThrow(() -> new RuntimeException("Product not found: " + itemDTO.getProductId()));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found: " + itemDTO.getProductId()));
 
             OrderItem item = new OrderItem();
             item.setOrder(order);
@@ -68,10 +69,15 @@ public class OrderService {
             item.setPrice(product.getPrice());
 
             items.add(item);
-            total += product.getPrice() * itemDTO.getQuantity();
+            
+            BigDecimal itemTotal = BigDecimal.valueOf(product.getPrice())
+                    .multiply(BigDecimal.valueOf(itemDTO.getQuantity()));
+
+            total = total.add(itemTotal);
         }
 
-        order.setTotalPrice(total);
+        order.setTotalPrice(total.setScale(2, RoundingMode.HALF_UP).doubleValue());
+
         order.setItems(items);
         orderRepository.save(order);
 

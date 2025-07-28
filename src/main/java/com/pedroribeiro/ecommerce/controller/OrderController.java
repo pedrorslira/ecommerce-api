@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pedroribeiro.ecommerce.dto.OrderDTO;
@@ -35,13 +34,17 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderRequestDTO request, @RequestParam String username) {
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderRequestDTO request, @RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "").trim();
+        String username = jwtService.extractUsername(token);
         OrderDTO orderDTO = orderService.createOrder(request, username);
         return ResponseEntity.ok(orderDTO);
     }
 
     @PostMapping("/{id}/pay")
-    public ResponseEntity<?> payOrder(@PathVariable UUID id, @RequestParam String username) {
+    public ResponseEntity<?> payOrder(@PathVariable UUID id, @RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "").trim();
+        String username = jwtService.extractUsername(token);
         OrderDTO orderDTO = orderService.payOrder(id, username);
         return ResponseEntity.ok(orderDTO);
     }
